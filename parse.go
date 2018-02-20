@@ -1,11 +1,9 @@
-package dom
+package godom
 
 import (
 	"errors"
 	"reflect"
 	"strings"
-
-	"fmt"
 
 	"golang.org/x/net/html"
 )
@@ -39,7 +37,7 @@ func GetElementsByTagName(n *html.Node, tagName string) []*html.Node {
 }
 
 func getElementsByTagName(n *html.Node, tagName string, storage []*html.Node) []*html.Node {
-	if n.Type == html.ElementNode || n.Type == html.DocumentNode {
+	if n.Type == html.ElementNode {
 		if n.Data == tagName {
 			storage = append(storage, n)
 		}
@@ -50,12 +48,28 @@ func getElementsByTagName(n *html.Node, tagName string, storage []*html.Node) []
 	return storage
 }
 
+func GetElementsByAttrKeyVal(n *html.Node, key, val string) []*html.Node {
+	return getElementsByAttrKeyVal(n, key, val, nil)
+}
+
+func getElementsByAttrKeyVal(n *html.Node, attrKey, attrVal string, storage []*html.Node) []*html.Node {
+	if n.Type == html.ElementNode {
+		if HasAttributeByKeyAndVal(n, &html.Attribute{"", attrKey, attrVal}) {
+			storage = append(storage, n)
+		}
+	}
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		storage = getElementsByAttrKeyVal(c, attrKey, attrVal, storage)
+	}
+	return storage
+}
+
 func GetElementsByAttrKey(n *html.Node, key string) []*html.Node {
 	return getElementsByAttrKey(n, key, nil)
 }
 
 func getElementsByAttrKey(n *html.Node, attrKey string, storage []*html.Node) []*html.Node {
-	if n.Type == html.ElementNode || n.Type == html.DocumentNode {
+	if n.Type == html.ElementNode {
 		if HasAttributeByKey(n, attrKey) {
 			storage = append(storage, n)
 		}
@@ -71,7 +85,7 @@ func GetElementsByTagNameAndClassName(n *html.Node, tagName, className string) [
 }
 
 func getElementsByTagNameAndClassName(n *html.Node, tagName, className string, storage []*html.Node) []*html.Node {
-	if n.Type == html.ElementNode || n.Type == html.DocumentNode {
+	if n.Type == html.ElementNode {
 		if n.Data == tagName && HasClassName(n, className) {
 			storage = append(storage, n)
 		}
@@ -87,7 +101,7 @@ func GetElementsByClassName(n *html.Node, className string) []*html.Node {
 }
 
 func getElementsByClassName(n *html.Node, className string, storage []*html.Node) []*html.Node {
-	if n.Type == html.ElementNode || n.Type == html.DocumentNode {
+	if n.Type == html.ElementNode {
 		if HasClassName(n, className) {
 			storage = append(storage, n)
 		}
@@ -99,7 +113,7 @@ func getElementsByClassName(n *html.Node, className string, storage []*html.Node
 }
 
 func GetElementByID(n *html.Node, elementID string) (*html.Node, error) {
-	if n.Type == html.ElementNode || n.Type == html.DocumentNode {
+	if n.Type == html.ElementNode {
 		for _, attr := range n.Attr {
 			if attr.Key == AttrKeyID && attr.Val == elementID {
 				return n, nil
@@ -124,7 +138,7 @@ func GetAttributeByKey(n *html.Node, key string) (*html.Attribute, error) {
 }
 
 func AddAttribute(n *html.Node, attr *html.Attribute) {
-	if n.Type == html.ElementNode || n.Type == html.DocumentNode {
+	if n.Type == html.ElementNode {
 		for i, _ := range n.Attr {
 			if n.Attr[i].Key == attr.Key {
 				if ok, _ := inArray(strings.Split(n.Attr[i].Val, " "), attr.Val); ok {
@@ -142,7 +156,7 @@ func AddAttribute(n *html.Node, attr *html.Attribute) {
 }
 
 func RemoveAttributeByKey(n *html.Node, attr *html.Attribute) {
-	if n.Type == html.ElementNode || n.Type == html.DocumentNode {
+	if n.Type == html.ElementNode {
 		for i, _ := range n.Attr {
 			if n.Attr[i].Key == attr.Key {
 				n.Attr = append(n.Attr[:i], n.Attr[i+1:]...)
@@ -153,7 +167,7 @@ func RemoveAttributeByKey(n *html.Node, attr *html.Attribute) {
 }
 
 func RemoveAttributeByKeyAndVal(n *html.Node, attr *html.Attribute) {
-	if n.Type == html.ElementNode || n.Type == html.DocumentNode {
+	if n.Type == html.ElementNode {
 		for i, _ := range n.Attr {
 			if n.Attr[i].Key == attr.Key {
 				n.Attr[i].Val = strings.TrimSpace(strings.Trim(n.Attr[i].Val, attr.Val))
@@ -164,7 +178,7 @@ func RemoveAttributeByKeyAndVal(n *html.Node, attr *html.Attribute) {
 }
 
 func HasAttributeByKey(n *html.Node, attrKey string) (hasKey bool) {
-	if n.Type == html.ElementNode || n.Type == html.DocumentNode {
+	if n.Type == html.ElementNode {
 		for _, attr := range n.Attr {
 			if attr.Key == attrKey {
 				hasKey = true
@@ -176,12 +190,8 @@ func HasAttributeByKey(n *html.Node, attrKey string) (hasKey bool) {
 }
 
 func HasAttributeByKeyAndVal(n *html.Node, byAttr *html.Attribute) (hasAttr bool) {
-	fmt.Println("n.Type", n.Type)
-	fmt.Println("n.Attr", n.Attr)
-	fmt.Println("byAttr", byAttr)
-	if n.Type == html.ElementNode || n.Type == html.DocumentNode {
+	if n.Type == html.ElementNode {
 		for _, attr := range n.Attr {
-			fmt.Println(attr.Key, attr.Val, byAttr.Key)
 			if attr.Key != byAttr.Key {
 				continue
 			}
