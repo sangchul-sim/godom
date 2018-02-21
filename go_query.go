@@ -1,6 +1,8 @@
 package godom
 
 import (
+	"bytes"
+
 	"golang.org/x/net/html"
 )
 
@@ -60,4 +62,14 @@ func (g *goQuery) RemoveClassName(className string) {
 	removeAttributeByKeyAndVal(g.node, &html.Attribute{
 		"", AttrKeyClass, className,
 	})
+}
+
+func (g *goQuery) NodeString() string {
+	buf := bytes.NewBufferString("")
+	html.Render(buf, g.node)
+	return buf.String()
+}
+
+func (g *goQuery) Node() *html.Node {
+	return g.node
 }

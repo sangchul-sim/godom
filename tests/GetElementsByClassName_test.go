@@ -110,7 +110,7 @@ func TestGetElementsByClassName(t *testing.T) {
 			continue
 		}
 		for i, m := range matches {
-			got := nodeString(m)
+			got := godom.NewGoQuery(m).NodeString()
 			if got != test.results[i] {
 				t.Errorf("class %s wanted %s, got %s instead at idx %d",
 					test.class,
@@ -131,7 +131,7 @@ func TestGetElementsByClassName(t *testing.T) {
 			continue
 		}
 		for i, m := range sMatches {
-			got := nodeString(m)
+			got := godom.NewGoQuery(m).NodeString()
 			if got != test.results[i] {
 				t.Errorf("selector %s wanted %s, got %s instead at idx %d",
 					test.selector,
