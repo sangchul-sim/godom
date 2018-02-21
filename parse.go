@@ -32,10 +32,6 @@ func inArray(array interface{}, val interface{}) (exists bool, index int) {
 	return
 }
 
-func GetElementsByTagName(n *html.Node, tagName string) []*html.Node {
-	return getElementsByTagName(n, tagName, nil)
-}
-
 func getElementsByTagName(n *html.Node, tagName string, storage []*html.Node) []*html.Node {
 	if n.Type == html.ElementNode {
 		if n.Data == tagName {
@@ -48,29 +44,9 @@ func getElementsByTagName(n *html.Node, tagName string, storage []*html.Node) []
 	return storage
 }
 
-func GetElementsByAttrKeyVal(n *html.Node, key, val string) []*html.Node {
-	return getElementsByAttrKeyVal(n, key, val, nil)
-}
-
-func getElementsByAttrKeyVal(n *html.Node, attrKey, attrVal string, storage []*html.Node) []*html.Node {
-	if n.Type == html.ElementNode {
-		if HasAttributeByKeyAndVal(n, &html.Attribute{"", attrKey, attrVal}) {
-			storage = append(storage, n)
-		}
-	}
-	for c := n.FirstChild; c != nil; c = c.NextSibling {
-		storage = getElementsByAttrKeyVal(c, attrKey, attrVal, storage)
-	}
-	return storage
-}
-
-func GetElementsByAttrKey(n *html.Node, key string) []*html.Node {
-	return getElementsByAttrKey(n, key, nil)
-}
-
 func getElementsByAttrKey(n *html.Node, attrKey string, storage []*html.Node) []*html.Node {
 	if n.Type == html.ElementNode {
-		if HasAttributeByKey(n, attrKey) {
+		if hasAttributeByKey(n, attrKey) {
 			storage = append(storage, n)
 		}
 	}
@@ -80,13 +56,23 @@ func getElementsByAttrKey(n *html.Node, attrKey string, storage []*html.Node) []
 	return storage
 }
 
-func GetElementsByTagNameAndClassName(n *html.Node, tagName, className string) []*html.Node {
-	return getElementsByTagNameAndClassName(n, tagName, className, nil)
+func getElementsByAttrKeyVal(n *html.Node, attrKey, attrVal string, storage []*html.Node) []*html.Node {
+	if n.Type == html.ElementNode {
+		if hasAttributeByKeyAndVal(n, &html.Attribute{"", attrKey, attrVal}) {
+			storage = append(storage, n)
+		}
+	}
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		storage = getElementsByAttrKeyVal(c, attrKey, attrVal, storage)
+	}
+	return storage
 }
 
 func getElementsByTagNameAndClassName(n *html.Node, tagName, className string, storage []*html.Node) []*html.Node {
 	if n.Type == html.ElementNode {
-		if n.Data == tagName && HasClassName(n, className) {
+		if n.Data == tagName && hasAttributeByKeyAndVal(n, &html.Attribute{
+			"", AttrKeyClass, className,
+		}) {
 			storage = append(storage, n)
 		}
 	}
@@ -96,13 +82,11 @@ func getElementsByTagNameAndClassName(n *html.Node, tagName, className string, s
 	return storage
 }
 
-func GetElementsByClassName(n *html.Node, className string) []*html.Node {
-	return getElementsByClassName(n, className, nil)
-}
-
 func getElementsByClassName(n *html.Node, className string, storage []*html.Node) []*html.Node {
 	if n.Type == html.ElementNode {
-		if HasClassName(n, className) {
+		if hasAttributeByKeyAndVal(n, &html.Attribute{
+			"", AttrKeyClass, className,
+		}) {
 			storage = append(storage, n)
 		}
 	}
@@ -112,7 +96,7 @@ func getElementsByClassName(n *html.Node, className string, storage []*html.Node
 	return storage
 }
 
-func GetElementByID(n *html.Node, elementID string) (*html.Node, error) {
+func getElementByID(n *html.Node, elementID string) (*html.Node, error) {
 	if n.Type == html.ElementNode {
 		for _, attr := range n.Attr {
 			if attr.Key == AttrKeyID && attr.Val == elementID {
@@ -121,14 +105,14 @@ func GetElementByID(n *html.Node, elementID string) (*html.Node, error) {
 		}
 	}
 	for c := n.FirstChild; c != nil; c = c.NextSibling {
-		if node, err := GetElementByID(c, elementID); err == nil {
+		if node, err := getElementByID(c, elementID); err == nil {
 			return node, err
 		}
 	}
 	return nil, errors.New("not found")
 }
 
-func GetAttributeByKey(n *html.Node, key string) (*html.Attribute, error) {
+func getAttributeByKey(n *html.Node, key string) (*html.Attribute, error) {
 	for _, attr := range n.Attr {
 		if attr.Key == key {
 			return &attr, nil
@@ -137,7 +121,7 @@ func GetAttributeByKey(n *html.Node, key string) (*html.Attribute, error) {
 	return nil, errors.New("not found")
 }
 
-func AddAttribute(n *html.Node, attr *html.Attribute) {
+func addAttribute(n *html.Node, attr *html.Attribute) {
 	if n.Type == html.ElementNode {
 		for i, _ := range n.Attr {
 			if n.Attr[i].Key == attr.Key {
@@ -155,7 +139,7 @@ func AddAttribute(n *html.Node, attr *html.Attribute) {
 	}
 }
 
-func RemoveAttributeByKey(n *html.Node, attr *html.Attribute) {
+func removeAttributeByKey(n *html.Node, attr *html.Attribute) {
 	if n.Type == html.ElementNode {
 		for i, _ := range n.Attr {
 			if n.Attr[i].Key == attr.Key {
@@ -166,7 +150,7 @@ func RemoveAttributeByKey(n *html.Node, attr *html.Attribute) {
 	}
 }
 
-func RemoveAttributeByKeyAndVal(n *html.Node, attr *html.Attribute) {
+func removeAttributeByKeyAndVal(n *html.Node, attr *html.Attribute) {
 	if n.Type == html.ElementNode {
 		for i, _ := range n.Attr {
 			if n.Attr[i].Key == attr.Key {
@@ -177,7 +161,7 @@ func RemoveAttributeByKeyAndVal(n *html.Node, attr *html.Attribute) {
 	}
 }
 
-func HasAttributeByKey(n *html.Node, attrKey string) (hasKey bool) {
+func hasAttributeByKey(n *html.Node, attrKey string) (hasKey bool) {
 	if n.Type == html.ElementNode {
 		for _, attr := range n.Attr {
 			if attr.Key == attrKey {
@@ -189,7 +173,7 @@ func HasAttributeByKey(n *html.Node, attrKey string) (hasKey bool) {
 	return
 }
 
-func HasAttributeByKeyAndVal(n *html.Node, byAttr *html.Attribute) (hasAttr bool) {
+func hasAttributeByKeyAndVal(n *html.Node, byAttr *html.Attribute) (hasAttr bool) {
 	if n.Type == html.ElementNode {
 		for _, attr := range n.Attr {
 			if attr.Key != byAttr.Key {
@@ -202,22 +186,4 @@ func HasAttributeByKeyAndVal(n *html.Node, byAttr *html.Attribute) (hasAttr bool
 		}
 	}
 	return
-}
-
-func HasClassName(n *html.Node, className string) bool {
-	return HasAttributeByKeyAndVal(n, &html.Attribute{
-		"", AttrKeyClass, className,
-	})
-}
-
-func AddClassName(n *html.Node, className string) {
-	AddAttribute(n, &html.Attribute{
-		AttrKeyClass, className, "",
-	})
-}
-
-func RemoveClassName(n *html.Node, className string) {
-	RemoveAttributeByKeyAndVal(n, &html.Attribute{
-		"", AttrKeyClass, className,
-	})
 }

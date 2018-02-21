@@ -9,7 +9,7 @@ import (
 	"golang.org/x/net/html"
 )
 
-func aTestGetElementsByClassName(t *testing.T) {
+func TestGetElementsByClassName(t *testing.T) {
 	var classTests = []struct {
 		HTML     string
 		class    string
@@ -98,7 +98,8 @@ func aTestGetElementsByClassName(t *testing.T) {
 			continue
 		}
 
-		matches := godom.GetElementsByClassName(doc, test.class)
+		qQuery := godom.NewGoQuery(doc)
+		matches := qQuery.GetElementsByClassName(test.class)
 		if len(matches) != len(test.results) {
 			t.Errorf("class %s wanted %d elements, got %d instead at idx %d",
 				test.class,
@@ -120,7 +121,7 @@ func aTestGetElementsByClassName(t *testing.T) {
 			}
 		}
 
-		cascadiaMatches := s.MatchAll(doc)
+		sMatches := s.MatchAll(doc)
 		if len(matches) != len(test.results) {
 			t.Errorf("class %s wanted %d elements, got %d instead",
 				test.selector,
@@ -129,7 +130,7 @@ func aTestGetElementsByClassName(t *testing.T) {
 			)
 			continue
 		}
-		for i, m := range cascadiaMatches {
+		for i, m := range sMatches {
 			got := nodeString(m)
 			if got != test.results[i] {
 				t.Errorf("selector %s wanted %s, got %s instead at idx %d",

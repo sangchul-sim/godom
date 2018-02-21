@@ -94,7 +94,7 @@ func aTestParse(t *testing.T) {
 	//}
 }
 
-func aTestGetElementsByAttrKey(t *testing.T) {
+func TestGetElementsByAttrKey(t *testing.T) {
 	var classTests = []struct {
 		HTML     string
 		attr     *html.Attribute
@@ -150,7 +150,8 @@ func aTestGetElementsByAttrKey(t *testing.T) {
 			continue
 		}
 
-		matches := godom.GetElementsByAttrKey(doc.FirstChild, test.attr.Key)
+		qQuery := godom.NewGoQuery(doc.FirstChild)
+		matches := qQuery.GetElementsByAttrKey(test.attr.Key)
 		if len(matches) != len(test.results) {
 			t.Errorf("attr %s wanted %d elements, got %d instead at idx %d",
 				test.attr,
@@ -251,7 +252,8 @@ func TestGetElementsByAttrKeyVal(t *testing.T) {
 			continue
 		}
 
-		matches := godom.GetElementsByAttrKeyVal(doc.FirstChild, test.attr.Key, test.attr.Val)
+		qQuery := godom.NewGoQuery(doc.FirstChild)
+		matches := qQuery.GetElementsByAttrKeyVal(test.attr.Key, test.attr.Val)
 		if len(matches) != len(test.results) {
 			t.Errorf("attr %s wanted %d elements, got %d instead at idx %d",
 				test.attr,
@@ -273,7 +275,7 @@ func TestGetElementsByAttrKeyVal(t *testing.T) {
 			}
 		}
 
-		cascadiaMatches := s.MatchAll(doc)
+		sMatches := s.MatchAll(doc)
 		if len(matches) != len(test.results) {
 			t.Errorf("selector %s wanted %d elements, got %d instead",
 				test.selector,
@@ -282,7 +284,7 @@ func TestGetElementsByAttrKeyVal(t *testing.T) {
 			)
 			continue
 		}
-		for i, m := range cascadiaMatches {
+		for i, m := range sMatches {
 			got := nodeString(m)
 			if got != test.results[i] {
 				t.Errorf("selector %s wanted %s, got %s instead at idx %d",
