@@ -127,15 +127,13 @@ func addAttribute(n *html.Node, attr *html.Attribute) {
 			if n.Attr[i].Key == attr.Key {
 				if ok, _ := inArray(strings.Split(n.Attr[i].Val, " "), attr.Val); ok {
 					n.Attr[i].Val += " " + attr.Val
-					return
+				} else {
+					n.Attr[i].Val = attr.Val
 				}
+				return
 			}
 		}
-		n.Attr = append(n.Attr, html.Attribute{
-			Namespace: attr.Namespace,
-			Key:       attr.Key,
-			Val:       attr.Val,
-		})
+		n.Attr = append(n.Attr, *attr)
 	}
 }
 
