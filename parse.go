@@ -112,23 +112,23 @@ func getElementByID(n *html.Node, elementID string) (*html.Node, error) {
 	return nil, errors.New("not found")
 }
 
-func getAttributeByKey(n *html.Node, key string) (*html.Attribute, error) {
+func getAttributeValByKey(n *html.Node, key string) (val string) {
 	for _, attr := range n.Attr {
 		if attr.Key == key {
-			return &attr, nil
+			return attr.Val
 		}
 	}
-	return nil, errors.New("not found")
+	return
 }
 
 func addAttribute(n *html.Node, attr *html.Attribute) {
 	if n.Type == html.ElementNode {
 		for i, _ := range n.Attr {
 			if n.Attr[i].Key == attr.Key {
-				if ok, _ := inArray(strings.Split(n.Attr[i].Val, " "), attr.Val); ok {
-					n.Attr[i].Val += " " + attr.Val
-				} else {
+				if strings.Compare(n.Attr[i].Val, "") == 0 {
 					n.Attr[i].Val = attr.Val
+				} else {
+					n.Attr[i].Val += " " + attr.Val
 				}
 				return
 			}

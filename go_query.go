@@ -38,8 +38,8 @@ func (g *goQuery) GetElementByID(elementID string) (*html.Node, error) {
 	return getElementByID(g.node, elementID)
 }
 
-func (g *goQuery) GetAttributeByKey(key string) (*html.Attribute, error) {
-	return getAttributeByKey(g.node, key)
+func (g *goQuery) GetAttributeByKey(key string) string {
+	return getAttributeValByKey(g.node, key)
 }
 
 func (g *goQuery) AddAttribute(attr *html.Attribute) {

@@ -76,7 +76,7 @@ func TestGetElementByID(t *testing.T) {
 		if got != test.result {
 			t.Errorf("class %s wanted %s, got %s instead at idx %d",
 				test.id,
-				test.result[idx],
+				test.result,
 				got,
 				idx,
 			)
