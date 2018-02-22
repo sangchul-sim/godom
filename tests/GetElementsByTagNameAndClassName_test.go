@@ -13,14 +13,14 @@ func TestGetElementsByTagNameAndClassName(t *testing.T) {
 	var classTests = []struct {
 		HTML     string
 		tag      string
-		class    string
+		attr     *html.Attribute
 		selector string
 		results  []string
 	}{
 		{
 			`<ul><li class="t1"><li class="t2">`,
 			"li",
-			"t1",
+			&html.Attribute{"", godom.AttrKeyClass, "t1"},
 			"li.t1",
 			[]string{
 				`<li class="t1"></li>`,
@@ -29,7 +29,7 @@ func TestGetElementsByTagNameAndClassName(t *testing.T) {
 		{
 			`<p class="t1 t2">`,
 			"p",
-			"t1",
+			&html.Attribute{"", godom.AttrKeyClass, "t1"},
 			"p.t1",
 			[]string{
 				`<p class="t1 t2"></p>`,
@@ -38,14 +38,14 @@ func TestGetElementsByTagNameAndClassName(t *testing.T) {
 		{
 			`<div class="test">`,
 			"div",
-			"teST",
+			&html.Attribute{"", godom.AttrKeyClass, "teST"},
 			"div.teST",
 			[]string{},
 		},
 		{
 			`<p class="t1 t2">`,
 			"p",
-			"t1.fail",
+			&html.Attribute{"", godom.AttrKeyClass, "t1.fail"},
 			"p.t1.fail",
 			[]string{},
 		},
@@ -68,7 +68,7 @@ func TestGetElementsByTagNameAndClassName(t *testing.T) {
 				<li>item5</li>
 			</ul>`,
 			"li",
-			"item",
+			&html.Attribute{"", godom.AttrKeyClass, "item"},
 			"li.item",
 			[]string{
 				`<li class="item">item1</li>`,
@@ -81,7 +81,7 @@ func TestGetElementsByTagNameAndClassName(t *testing.T) {
 		{
 			`<p class="">This text should be green.</p><p>This text should be green.</p>`,
 			"p",
-			"",
+			&html.Attribute{"", godom.AttrKeyClass, ""},
 			`p[class=""]`,
 			[]string{
 				`<p class="">This text should be green.</p>`,
@@ -102,10 +102,10 @@ func TestGetElementsByTagNameAndClassName(t *testing.T) {
 		}
 
 		qQuery := godom.NewGoQuery(doc)
-		matches := qQuery.GetElementsByTagNameAndClassName(test.tag, test.class)
+		matches := qQuery.GetElementsByTagNameAndClassName(test.tag, test.attr.Val)
 		if len(matches) != len(test.results) {
 			t.Errorf("class %s wanted %d elements, got %d instead at idx %d",
-				test.class,
+				test.attr.Val,
 				len(test.results),
 				len(matches),
 				idx,
@@ -116,7 +116,7 @@ func TestGetElementsByTagNameAndClassName(t *testing.T) {
 			got := godom.NewGoQuery(m).NodeString()
 			if got != test.results[i] {
 				t.Errorf("class %s wanted %s, got %s instead at idx %d",
-					test.class,
+					test.attr.Val,
 					test.results[i],
 					got,
 					idx,

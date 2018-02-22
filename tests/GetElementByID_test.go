@@ -12,19 +12,19 @@ import (
 func TestGetElementByID(t *testing.T) {
 	var classTests = []struct {
 		HTML     string
-		id       string
+		attr     *html.Attribute
 		selector string
 		result   string
 	}{
 		{
 			`<ul><li class="t1" id="item"><li class="t2">`,
-			"item",
+			&html.Attribute{"", godom.AttrKeyID, "item"},
 			"#item",
 			`<li class="t1" id="item"></li>`,
 		},
 		{
 			`<p class="t1 t2">`,
-			"item",
+			&html.Attribute{"", godom.AttrKeyID, "item"},
 			"#item",
 			`not found`,
 		},
@@ -46,7 +46,7 @@ func TestGetElementByID(t *testing.T) {
 				<li class="top item" id="active">item4</li>
 				<li>item5</li>
 			</ul>`,
-			"active",
+			&html.Attribute{"", godom.AttrKeyID, "active"},
 			"#active",
 			`<li class="item" id="active">item1</li>`,
 		},
@@ -65,7 +65,7 @@ func TestGetElementByID(t *testing.T) {
 		}
 
 		qQuery := godom.NewGoQuery(doc)
-		matche, err := qQuery.GetElementByID(test.id)
+		matche, err := qQuery.GetElementByID(test.attr.Val)
 		if err != nil {
 			if err.Error() != test.result {
 				t.Errorf("test.result %s, err %s", test.result, err)
@@ -75,7 +75,7 @@ func TestGetElementByID(t *testing.T) {
 		got := godom.NewGoQuery(matche).NodeString()
 		if got != test.result {
 			t.Errorf("class %s wanted %s, got %s instead at idx %d",
-				test.id,
+				test.attr.Key,
 				test.result,
 				got,
 				idx,
@@ -86,7 +86,7 @@ func TestGetElementByID(t *testing.T) {
 		got = godom.NewGoQuery(sMatche).NodeString()
 		if got != test.result {
 			t.Errorf("selector %s wanted %s, got %s instead at idx %d",
-				test.id,
+				test.attr.Key,
 				test.result,
 				got,
 				idx,

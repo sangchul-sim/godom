@@ -12,7 +12,7 @@ import (
 func TestGetElementsByTagName(t *testing.T) {
 	var tagTests = []struct {
 		HTML     string
-		tag      string
+		tagName  string
 		selector string
 		results  []string
 	}{
@@ -86,10 +86,10 @@ func TestGetElementsByTagName(t *testing.T) {
 		}
 
 		qQuery := godom.NewGoQuery(doc)
-		matches := qQuery.GetElementsByTagName(test.tag)
+		matches := qQuery.GetElementsByTagName(test.tagName)
 		if len(matches) != len(test.results) {
 			t.Errorf("class %s wanted %d elements, got %d instead at idx %d",
-				test.tag,
+				test.tagName,
 				len(test.results),
 				len(matches),
 				idx,
@@ -100,7 +100,7 @@ func TestGetElementsByTagName(t *testing.T) {
 			got := godom.NewGoQuery(m).NodeString()
 			if got != test.results[i] {
 				t.Errorf("class %s wanted %s, got %s instead at idx %d",
-					test.tag,
+					test.tagName,
 					test.results[i],
 					got,
 					idx,
