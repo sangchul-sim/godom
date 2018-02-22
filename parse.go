@@ -98,10 +98,8 @@ func getElementsByClassName(n *html.Node, className string, storage []*html.Node
 
 func getElementByID(n *html.Node, elementID string) (*html.Node, error) {
 	if n.Type == html.ElementNode {
-		for _, attr := range n.Attr {
-			if attr.Key == AttrKeyID && attr.Val == elementID {
-				return n, nil
-			}
+		if hasAttributeByKeyAndVal(n, &html.Attribute{"", AttrKeyID, elementID}) {
+			return n, nil
 		}
 	}
 	for c := n.FirstChild; c != nil; c = c.NextSibling {
@@ -152,7 +150,7 @@ func removeAttributeByKeyAndVal(n *html.Node, attr *html.Attribute) {
 	if n.Type == html.ElementNode {
 		for i, _ := range n.Attr {
 			if n.Attr[i].Key == attr.Key {
-				n.Attr[i].Val = strings.TrimSpace(strings.Trim(n.Attr[i].Val, attr.Val))
+				n.Attr[i].Val = strings.TrimSpace(strings.Replace(n.Attr[i].Val, attr.Val, "", 1))
 				break
 			}
 		}

@@ -46,6 +46,14 @@ func (g *goQuery) AddAttribute(attr *html.Attribute) {
 	addAttribute(g.node, attr)
 }
 
+func (g *goQuery) RemoveAttributeByKey(attr *html.Attribute) {
+	removeAttributeByKey(g.node, attr)
+}
+
+func (g *goQuery) RemoveAttributeByKeyAndVal(attr *html.Attribute) {
+	removeAttributeByKeyAndVal(g.node, attr)
+}
+
 func (g *goQuery) HasClassName(className string) bool {
 	return hasAttributeByKeyAndVal(g.node, &html.Attribute{
 		"", AttrKeyClass, className,
