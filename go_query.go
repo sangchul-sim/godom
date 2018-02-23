@@ -82,7 +82,11 @@ func (g *goQuery) ElementByID(elementID string) (elem *goQuery, err error) {
 	return
 }
 
-func (g *goQuery) GetAttributeByKey(key string) string {
+func (g *goQuery) GetInnerText() string {
+	return getInnerText(g.node)
+}
+
+func (g *goQuery) GetAttributeByKey(key string) *html.Attribute {
 	return getAttributeValByKey(g.node, key)
 }
 

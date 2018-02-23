@@ -110,13 +110,13 @@ func getElementByID(n *html.Node, elementID string) (*html.Node, error) {
 	return nil, errors.New("not found")
 }
 
-func getAttributeValByKey(n *html.Node, key string) (val string) {
+func getAttributeValByKey(n *html.Node, key string) *html.Attribute {
 	for _, attr := range n.Attr {
 		if attr.Key == key {
-			return attr.Val
+			return &attr
 		}
 	}
-	return
+	return nil
 }
 
 func addAttribute(n *html.Node, attr *html.Attribute) {
@@ -179,6 +179,15 @@ func hasAttributeByKeyAndVal(n *html.Node, byAttr *html.Attribute) (hasAttr bool
 				hasAttr = true
 				return
 			}
+		}
+	}
+	return
+}
+
+func getInnerText(n *html.Node) (str string) {
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		if c.Type == html.TextNode {
+			str += c.Data
 		}
 	}
 	return
