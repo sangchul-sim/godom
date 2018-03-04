@@ -80,7 +80,7 @@ func TestAddAttribute(t *testing.T) {
 			continue
 		}
 
-		qQuery := godom.NewGoQuery(s.MatchFirst(doc))
+		qQuery := godom.NewGoDom(s.MatchFirst(doc))
 		qQuery.AddAttribute(test.attr)
 
 		got := qQuery.GetAttributeByKey(test.attr.Key)

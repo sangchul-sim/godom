@@ -6,82 +6,82 @@ import (
 	"golang.org/x/net/html"
 )
 
-type goQuery struct {
+type goDom struct {
 	node *html.Node
 }
 
-func NewGoQuery(n *html.Node) *goQuery {
-	return &goQuery{n}
+func NewGoDom(n *html.Node) *goDom {
+	return &goDom{n}
 }
 
-func (g *goQuery) GetElementsByTagName(tagName string) []*html.Node {
+func (g *goDom) GetElementsByTagName(tagName string) []*html.Node {
 	return getElementsByTagName(g.node, tagName, nil)
 }
 
-func (g *goQuery) GetElementsByAttrKey(key string) []*html.Node {
+func (g *goDom) GetElementsByAttrKey(key string) []*html.Node {
 	return getElementsByAttrKey(g.node, key, nil)
 }
 
-func (g *goQuery) GetElementsByAttrKeyVal(key, val string) []*html.Node {
+func (g *goDom) GetElementsByAttrKeyVal(key, val string) []*html.Node {
 	return getElementsByAttrKeyVal(g.node, key, val, nil)
 }
 
-func (g *goQuery) GetElementsByTagNameAndClassName(tagName, className string) []*html.Node {
+func (g *goDom) GetElementsByTagNameAndClassName(tagName, className string) []*html.Node {
 	return getElementsByTagNameAndClassName(g.node, tagName, className, nil)
 }
 
-func (g *goQuery) GetElementsByClassName(className string) []*html.Node {
+func (g *goDom) GetElementsByClassName(className string) []*html.Node {
 	return getElementsByClassName(g.node, className, nil)
 }
 
-func (g *goQuery) GetElementByID(elementID string) (*html.Node, error) {
+func (g *goDom) GetElementByID(elementID string) (*html.Node, error) {
 	return getElementByID(g.node, elementID)
 }
 
-func (g *goQuery) GetInnerText() string {
+func (g *goDom) GetInnerText() string {
 	return getInnerText(g.node)
 }
 
-func (g *goQuery) GetAttributeByKey(key string) *html.Attribute {
+func (g *goDom) GetAttributeByKey(key string) *html.Attribute {
 	return getAttributeValByKey(g.node, key)
 }
 
-func (g *goQuery) AddAttribute(attr *html.Attribute) {
+func (g *goDom) AddAttribute(attr *html.Attribute) {
 	addAttribute(g.node, attr)
 }
 
-func (g *goQuery) RemoveAttributeByKey(attr *html.Attribute) {
+func (g *goDom) RemoveAttributeByKey(attr *html.Attribute) {
 	removeAttributeByKey(g.node, attr)
 }
 
-func (g *goQuery) RemoveAttributeByKeyAndVal(attr *html.Attribute) {
+func (g *goDom) RemoveAttributeByKeyAndVal(attr *html.Attribute) {
 	removeAttributeByKeyAndVal(g.node, attr)
 }
 
-func (g *goQuery) HasClassName(className string) bool {
+func (g *goDom) HasClassName(className string) bool {
 	return hasAttributeByKeyAndVal(g.node, &html.Attribute{
 		"", AttrKeyClass, className,
 	})
 }
 
-func (g *goQuery) AddClassName(className string) {
+func (g *goDom) AddClassName(className string) {
 	addAttribute(g.node, &html.Attribute{
 		AttrKeyClass, className, "",
 	})
 }
 
-func (g *goQuery) RemoveClassName(className string) {
+func (g *goDom) RemoveClassName(className string) {
 	removeAttributeByKeyAndVal(g.node, &html.Attribute{
 		"", AttrKeyClass, className,
 	})
 }
 
-func (g *goQuery) NodeString() string {
+func (g *goDom) NodeString() string {
 	buf := bytes.NewBufferString("")
 	html.Render(buf, g.node)
 	return buf.String()
 }
 
-func (g *goQuery) Node() *html.Node {
+func (g *goDom) Node() *html.Node {
 	return g.node
 }

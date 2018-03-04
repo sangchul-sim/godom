@@ -85,7 +85,7 @@ func TestGetElementsByTagName(t *testing.T) {
 			continue
 		}
 
-		qQuery := godom.NewGoQuery(doc)
+		qQuery := godom.NewGoDom(doc)
 		matches := qQuery.GetElementsByTagName(test.tagName)
 		if len(matches) != len(test.results) {
 			t.Errorf("class %s wanted %d elements, got %d instead at idx %d",
@@ -97,7 +97,7 @@ func TestGetElementsByTagName(t *testing.T) {
 			continue
 		}
 		for i, m := range matches {
-			got := godom.NewGoQuery(m).NodeString()
+			got := godom.NewGoDom(m).NodeString()
 			if got != test.results[i] {
 				t.Errorf("class %s wanted %s, got %s instead at idx %d",
 					test.tagName,
@@ -118,7 +118,7 @@ func TestGetElementsByTagName(t *testing.T) {
 			continue
 		}
 		for i, m := range sMatches {
-			got := godom.NewGoQuery(m).NodeString()
+			got := godom.NewGoDom(m).NodeString()
 			if got != test.results[i] {
 				t.Errorf("selector %s wanted %s, got %s instead at idx %d",
 					test.selector,

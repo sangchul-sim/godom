@@ -64,7 +64,7 @@ func TestGetElementByID(t *testing.T) {
 			continue
 		}
 
-		qQuery := godom.NewGoQuery(doc)
+		qQuery := godom.NewGoDom(doc)
 		matche, err := qQuery.GetElementByID(test.attr.Val)
 		if err != nil {
 			if err.Error() != test.result {
@@ -72,7 +72,7 @@ func TestGetElementByID(t *testing.T) {
 			}
 			continue
 		}
-		got := godom.NewGoQuery(matche).NodeString()
+		got := godom.NewGoDom(matche).NodeString()
 		if got != test.result {
 			t.Errorf("class %s wanted %s, got %s instead at idx %d",
 				test.attr.Key,
@@ -83,7 +83,7 @@ func TestGetElementByID(t *testing.T) {
 		}
 
 		sMatche := s.MatchFirst(doc)
-		got = godom.NewGoQuery(sMatche).NodeString()
+		got = godom.NewGoDom(sMatche).NodeString()
 		if got != test.result {
 			t.Errorf("selector %s wanted %s, got %s instead at idx %d",
 				test.attr.Key,

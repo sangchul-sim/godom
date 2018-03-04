@@ -150,7 +150,7 @@ func TestGetElementsByAttrKey(t *testing.T) {
 			continue
 		}
 
-		qQuery := godom.NewGoQuery(doc.FirstChild)
+		qQuery := godom.NewGoDom(doc.FirstChild)
 		matches := qQuery.GetElementsByAttrKey(test.attr.Key)
 		if len(matches) != len(test.results) {
 			t.Errorf("attr %s wanted %d elements, got %d instead at idx %d",
@@ -162,7 +162,7 @@ func TestGetElementsByAttrKey(t *testing.T) {
 			continue
 		}
 		for i, m := range matches {
-			got := godom.NewGoQuery(m).NodeString()
+			got := godom.NewGoDom(m).NodeString()
 			if got != test.results[i] {
 				t.Errorf("attr %s wanted %s, got %s instead at idx %d",
 					test.selector,
@@ -183,7 +183,7 @@ func TestGetElementsByAttrKey(t *testing.T) {
 			continue
 		}
 		for i, m := range cascadiaMatches {
-			got := godom.NewGoQuery(m).NodeString()
+			got := godom.NewGoDom(m).NodeString()
 			if got != test.results[i] {
 				t.Errorf("selector %s wanted %s, got %s instead at idx %d",
 					test.selector,
@@ -252,7 +252,7 @@ func TestGetElementsByAttrKeyVal(t *testing.T) {
 			continue
 		}
 
-		qQuery := godom.NewGoQuery(doc.FirstChild)
+		qQuery := godom.NewGoDom(doc.FirstChild)
 		matches := qQuery.GetElementsByAttrKeyVal(test.attr.Key, test.attr.Val)
 		if len(matches) != len(test.results) {
 			t.Errorf("attr %s wanted %d elements, got %d instead at idx %d",
@@ -264,7 +264,7 @@ func TestGetElementsByAttrKeyVal(t *testing.T) {
 			continue
 		}
 		for i, m := range matches {
-			got := godom.NewGoQuery(m).NodeString()
+			got := godom.NewGoDom(m).NodeString()
 			if got != test.results[i] {
 				t.Errorf("attr %s wanted %s, got %s instead at idx %d",
 					test.selector,
@@ -285,7 +285,7 @@ func TestGetElementsByAttrKeyVal(t *testing.T) {
 			continue
 		}
 		for i, m := range sMatches {
-			got := godom.NewGoQuery(m).NodeString()
+			got := godom.NewGoDom(m).NodeString()
 			if got != test.results[i] {
 				t.Errorf("selector %s wanted %s, got %s instead at idx %d",
 					test.selector,

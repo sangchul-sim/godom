@@ -70,7 +70,7 @@ func TestGetAttributeByKey(t *testing.T) {
 			continue
 		}
 
-		qQuery := godom.NewGoQuery(s.MatchFirst(doc))
+		qQuery := godom.NewGoDom(s.MatchFirst(doc))
 		got := qQuery.GetAttributeByKey(test.attr.Key)
 		if got.Val != test.result {
 			t.Errorf("attrKey %s wanted %s, got %s instead at idx %d",

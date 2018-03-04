@@ -80,7 +80,7 @@ func TestRemoveAttributeByKey(t *testing.T) {
 			continue
 		}
 
-		qQuery := godom.NewGoQuery(s.MatchFirst(doc))
+		qQuery := godom.NewGoDom(s.MatchFirst(doc))
 		qQuery.RemoveAttributeByKey(test.attr)
 
 		got := qQuery.GetAttributeByKey(test.attr.Key)
@@ -166,7 +166,7 @@ func TestRemoveAttributeByKeyAndVal(t *testing.T) {
 			continue
 		}
 
-		qQuery := godom.NewGoQuery(s.MatchFirst(doc))
+		qQuery := godom.NewGoDom(s.MatchFirst(doc))
 		qQuery.RemoveAttributeByKeyAndVal(test.attr)
 
 		got := qQuery.GetAttributeByKey(test.attr.Key)
